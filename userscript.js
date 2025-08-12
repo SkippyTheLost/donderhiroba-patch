@@ -8,7 +8,7 @@
 // @connect      raw.githubusercontent.com
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     let translations = {};
@@ -24,33 +24,32 @@
     }
 
     function translateText(text) {
-        let newText = text;
-        for (let jp in translations) {
-            if (newText.includes(jp)) {
-                newText = newText.replace(new RegExp(jp, "g"), translations[jp]);
+        for (let key in translations.ui) {
+            if (text.includes(key)) {
+                text = text.replace(new RegExp(key, 'g'), translations.ui[key]);
             }
         }
-        return newText;
+        return text;
     }
 
-function translatePage() {
-    const walker = document.createTreeWalker(
-        document.body,
-        NodeFilter.SHOW_TEXT,
-        null,
-        false
-    );
+    function translatePage() {
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
 
-    let node;
-    while ((node = walker.nextNode())) {
-        const oldText = node.nodeValue;
-        const newText = translateText(oldText);
-        if (oldText !== newText) {
-            node.nodeValue = newText;
+        let node;
+        while ((node = walker.nextNode())) {
+            let oldText = node.nodeValue;
+            let newText = translateText(oldText);
+
+            if (oldText !== newText) {
+                node.nodeValue = newText;
+            }
         }
     }
-}
-
 
     function startObserver() {
         const observer = new MutationObserver(translatePage);
