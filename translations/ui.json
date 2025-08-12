@@ -1,8 +1,12 @@
 {
     "お知らせだドン！": "Announcements!",
 
-    "こちらの「ログイン」ボタンから": "You can enter Donda Hiroba by",
-    "ドンだーひろばに入ることができます。": "clicking the 'Login' button here.",
+    "こちらの「ログイン」ボタンから": "You can enter Donda Hiroba by clicking the 'Login' button here.",
+    "ドンだーひろばに入ることができます。": "",
+
+    "「ドンだーひろば」をご利用の際は、": "Before using Donder Hiroba, please agree to the",
+    "利用規約(必読)": "Terms of Use",
+    "にご同意ください。": ".",
 
     "バンダイナムコID無料ユーザー登録": "Bandai Namco ID Registration",
     "ドンだーひろばで出来ることを紹介するよ！": "Let me introduce what you can do on Donderhiroba!",
@@ -13,5 +17,7 @@
     "マイページ": "My Page",
     "きせかえ": "Customize",
     "スコアデータの確認": "View Scores",
-    "ランキング": "Ranking"
+    "ランキング": "Ranking",
+
+    "ドンだーひろば": "Donder Hiroba"
 }
