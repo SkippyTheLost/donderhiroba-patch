@@ -6,6 +6,7 @@
 // @match        https://donderhiroba.jp/*
 // @grant        GM_xmlhttpRequest
 // @connect      raw.githubusercontent.com
+// @require      https://cdn.jsdelivr.net/npm/json5@2.2.1/dist/index.min.js
 // ==/UserScript==
 
 (function () {
@@ -14,9 +15,9 @@
     let translations = {};
 
     const files = [
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/ui.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/songs.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/rewards.json"
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/ui.json5",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/songs.json5",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/rewards.json5"
     ];
 
     function mergeTranslations(newData) {
@@ -24,13 +25,32 @@
     }
 
     function translateText(text) {
-        for (let key in translations.ui) {
-            if (text.includes(key)) {
-                text = text.replace(new RegExp(key, 'g'), translations.ui[key]);
+        let newText = text;
+        for (let jp in translations) {
+            let escapedKey = jp.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            if (newText.includes(jp)) {
+                newText = newText.replace(new RegExp(escapedKey, "g"), translations[jp]);
             }
         }
-        return text;
+        return newText;
     }
+
+
+    function translateLinks() {
+        document.querySelectorAll('a').forEach(a => {
+            let oldText = a.textContent;
+            let newText = oldText;
+            for (let jp in translations) {
+                if (newText.includes(jp)) {
+                    newText = newText.replace(new RegExp(jp.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "g"), translations[jp]);
+                }
+            }
+            if (oldText !== newText) {
+                a.textContent = newText;
+            }
+        });
+    }
+
 
     function translatePage() {
         const walker = document.createTreeWalker(
@@ -42,14 +62,14 @@
 
         let node;
         while ((node = walker.nextNode())) {
-            let oldText = node.nodeValue;
-            let newText = translateText(oldText);
-
+            const oldText = node.nodeValue;
+            const newText = translateText(oldText);
             if (oldText !== newText) {
                 node.nodeValue = newText;
             }
         }
     }
+
 
     function startObserver() {
         const observer = new MutationObserver(translatePage);
@@ -63,7 +83,7 @@
                 url,
                 onload: res => {
                     try {
-                        resolve(JSON.parse(res.responseText));
+                        resolve(JSON5.parse(res.responseText));
                     } catch (e) {
                         reject(e);
                     }
@@ -77,8 +97,8 @@
         .then(dataArray => {
             dataArray.forEach(data => mergeTranslations(data));
             translatePage();
+            translateLinks();  // <--- Add this here
             startObserver();
         })
         .catch(err => console.error("Translation load error:", err));
-
 })();
