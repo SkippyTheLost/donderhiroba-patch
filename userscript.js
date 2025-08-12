@@ -14,25 +14,43 @@
     let translations = {};
 
     const files = [
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/ui.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/songs.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/rewards.json"
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/ui.json",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/songs.json",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/rewards.json"
     ];
 
     function mergeTranslations(newData) {
         translations = { ...translations, ...newData };
     }
 
-    function translatePage() {
-        document.querySelectorAll("*").forEach(el => {
-            if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-                let text = el.innerText.trim();
-                if (translations[text]) {
-                    el.innerText = translations[text];
-                }
+    function translateText(text) {
+        let newText = text;
+        for (let jp in translations) {
+            if (newText.includes(jp)) {
+                newText = newText.replace(new RegExp(jp, "g"), translations[jp]);
             }
-        });
+        }
+        return newText;
     }
+
+function translatePage() {
+    const walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+    );
+
+    let node;
+    while ((node = walker.nextNode())) {
+        const oldText = node.nodeValue;
+        const newText = translateText(oldText);
+        if (oldText !== newText) {
+            node.nodeValue = newText;
+        }
+    }
+}
+
 
     function startObserver() {
         const observer = new MutationObserver(translatePage);
