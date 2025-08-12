@@ -14,9 +14,9 @@
     let translations = {};
 
     const files = [
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/ui.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/songs.json",
-        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/main/translations/rewards.json"
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/ui.json",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/songs.json",
+        "https://raw.githubusercontent.com/SkippyTheLost/donderhiroba-patch/refs/heads/main/translations/rewards.json"
     ];
 
     function mergeTranslations(newData) {
